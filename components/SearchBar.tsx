@@ -99,9 +99,9 @@ const SearchBar: React.FunctionComponent = (props) => {
         let streamsJSON = null as any
         try {
             const objectUrl = await ipcRenderer.invoke("get-object")
-            const region = objectUrl.match(/(?<=\/v2\/)(.*?)(?=\/M3\/)/)?.[0]
+            const region = objectUrl.match(/(?<=\/v2\/)(.*?)(?=\/objects\/)/)?.[0]
             const keySig = objectUrl.split("?")[1]
-            const objectJSON = await fetch(`https://beta.crunchyroll.com/cms/v2/${region}/M3/crunchyroll/objects/${id}?${keySig}`, {headers: {cookie}}).then((r) => r.json())
+            let objectJSON = await fetch(`https://beta.crunchyroll.com/cms/v2/${region}/objects/${id}?${keySig}`, {headers: {cookie}}).then((r) => r.json())
             const streamsUrl = `https://beta.crunchyroll.com${objectJSON.items[0].__links__.streams.href}?${keySig}`
             streamsJSON = await fetch(streamsUrl, {headers: {cookie}}).then((r) => r.json()).catch(() => null)
         } catch {
@@ -169,9 +169,9 @@ const SearchBar: React.FunctionComponent = (props) => {
         let playback = json.content.media.byId[id].playback
         if (!playback) {
             const objectUrl = await ipcRenderer.invoke("get-object")
-            const region = objectUrl.match(/(?<=\/v2\/)(.*?)(?=\/M3\/)/)?.[0]
+            const region = objectUrl.match(/(?<=\/v2\/)(.*?)(?=\/objects\/)/)?.[0]
             const keySig = objectUrl.split("?")[1]
-            json = await fetch(`https://beta.crunchyroll.com/cms/v2/${region}/M3/crunchyroll/objects/${id}?${keySig}`, {headers: {cookie}}).then((r) => r.json())
+            json = await fetch(`https://beta.crunchyroll.com/cms/v2/${region}/objects/${id}?${keySig}`, {headers: {cookie}}).then((r) => r.json())
             playback = json.items?.[0].playback
         }
         const vilos = await fetch(playback, {headers: {cookie}}).then((r) => r.json())
@@ -219,9 +219,9 @@ const SearchBar: React.FunctionComponent = (props) => {
         let playback = json.content.media.byId[id].playback
         if (!playback) {
             const objectUrl = await ipcRenderer.invoke("get-object")
-            const region = objectUrl.match(/(?<=\/v2\/)(.*?)(?=\/M3\/)/)?.[0]
+            const region = objectUrl.match(/(?<=\/v2\/)(.*?)(?=\/objects\/)/)?.[0]
             const keySig = objectUrl.split("?")[1]
-            json = await fetch(`https://beta.crunchyroll.com/cms/v2/${region}/M3/crunchyroll/objects/${id}?${keySig}`, {headers: {cookie}}).then((r) => r.json())
+            json = await fetch(`https://beta.crunchyroll.com/cms/v2/${region}/objects/${id}?${keySig}`, {headers: {cookie}}).then((r) => r.json())
             playback = json.items?.[0].playback
         }
         const vilos = await fetch(playback, {headers: {cookie}}).then((r) => r.json())
