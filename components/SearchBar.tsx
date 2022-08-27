@@ -108,8 +108,8 @@ const SearchBar: React.FunctionComponent = (props) => {
             // ignore
         }
         const episode = { 
-            ...meta, episode_number: meta.episode_number, duration: meta.duration,url,
-            name: meta.title,series_name: meta.parentTitle,collection_name: meta.seasonTitle,screenshot_image: { large_url: meta.images.thumbnail?.[0]?.[0].source }, bif_url: streamsJSON?.bifs?.[0]}
+            ...meta, episode_number: meta.episodeNumber, duration: meta.duration,url,
+            name: meta.title,series_name: meta.parentTitle, collection_name: meta.seasonTitle, screenshot_image: { large_url: meta.images.thumbnail?.[0]?.[0].source }, bif_url: streamsJSON?.bifs?.[0]}
           return episode
     }
 
