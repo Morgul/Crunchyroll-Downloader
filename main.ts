@@ -18,7 +18,7 @@ let ffmpegPath = undefined as any
 if (process.platform === "darwin") ffmpegPath = path.join(app.getAppPath(), "../../ffmpeg/ffmpeg.app")
 if (process.platform === "win32") ffmpegPath = path.join(app.getAppPath(), "../../ffmpeg/ffmpeg.exe")
 if (process.platform === "linux") ffmpegPath = path.join(app.getAppPath(), "../../ffmpeg/ffmpeg")
-if (!fs.existsSync(ffmpegPath)) ffmpegPath = process.platform === "darwin" ? "/opt/homebrew/Cellar/ffmpeg/5.0.1/bin/ffmpeg" : undefined
+if (!fs.existsSync(ffmpegPath)) ffmpegPath = process.platform === "darwin" ? "/opt/homebrew/Cellar/ffmpeg/5.1/bin/ffmpeg" : undefined
 autoUpdater.autoDownload = false
 const store = new Store()
 
@@ -317,6 +317,7 @@ const nextQueue = async (info: any) => {
 }
 
 const downloadEpisode = async (info: any, episode: CrunchyrollEpisode) => {
+  console.log(info)
   let qIndex = queue.findIndex((q) => q.info.id === info.id)
   if (qIndex !== -1) queue[qIndex].started = true
   let format = "mp4"
