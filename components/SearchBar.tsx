@@ -129,7 +129,16 @@ const SearchBar: React.FunctionComponent = (props) => {
         if (!html) html = await fetch(url, {headers: {cookie}}).then((r) => r.text())
         let urls = html?.match(/(?<=href="\/)watch\/(.*?)(?=")/gm) as string[]
         urls = functions.removeDuplicates(urls?.map((u) => `https://beta.crunchyroll.com/${u}`))
-        if (!urls?.length) return ipcRenderer.invoke("download-error", "search")
+        if (!urls?.length) {
+            const episodesLink = await ipcRenderer.invoke("get-episodes-link")
+            const episodesJSON = await fetch(episodesLink, {headers: {cookie}}).then((r) => r.json())
+            urls = [] as string[]
+            for (let i = 0; i < episodesJSON.items.length; i++) {
+                const episode = episodesJSON.items[i] 
+                urls.push(`https://beta.crunchyroll.com/watch/${episode.id}/${episode.slug_title}`)
+            }
+            if (!urls?.length) return ipcRenderer.invoke("download-error", "search")
+        }
         let episodes = await Promise.all(urls.map((u) => parseEpisodeBeta(u)))
         return episodes.sort((a, b) => Number(a.episode_number) > Number(b.episode_number) ? 1 : -1)
     }

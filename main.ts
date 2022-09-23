@@ -64,6 +64,10 @@ ipcMain.handle("get-streams", () => {
   return store.get("streams", "")
 })
 
+ipcMain.handle("get-episodes-link", () => {
+  return store.get("episodes", "")
+})
+
 ipcMain.handle("get-object", () => {
   return store.get("object", "")
 })
@@ -317,7 +321,6 @@ const nextQueue = async (info: any) => {
 }
 
 const downloadEpisode = async (info: any, episode: CrunchyrollEpisode) => {
-  console.log(info)
   let qIndex = queue.findIndex((q) => q.info.id === info.id)
   if (qIndex !== -1) queue[qIndex].started = true
   let format = "mp4"
@@ -524,6 +527,7 @@ if (!singleLock) {
     session.defaultSession.webRequest.onCompleted({urls: ["https://beta.crunchyroll.com/cms/*"]}, (details) => {
       if (details.url.includes("objects/")) store.set("object", encodeURI(details.url))
       if (details.url.includes("videos/")) store.set("streams", encodeURI(details.url))
+      if (details.url.includes("/episodes?")) store.set("episodes", encodeURI(details.url))
     })
   })
 }
