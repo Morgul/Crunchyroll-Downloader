@@ -359,7 +359,7 @@ const downloadEpisode = async (info: any, episode: CrunchyrollEpisode) => {
       }
       const duration1 = await crunchyroll.util.parseDuration(dest, ffmpegPath)
       const duration2 = await crunchyroll.util.parseDuration(info.playlist, ffmpegPath)
-      if (Math.round(duration1) === Math.round(duration2)) {
+      if (Math.abs(Math.round(duration1) - Math.round(duration2)) < 500) {
         window?.webContents.send("download-ended", {id: info.id, output: dest, skipped: true})
         return nextQueue(info)
       }

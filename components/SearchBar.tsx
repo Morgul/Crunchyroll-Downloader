@@ -128,19 +128,20 @@ const SearchBar: React.FunctionComponent = (props) => {
         const cookie = await ipcRenderer.invoke("get-cookie")
         if (!html) html = await fetch(url, {headers: {cookie}}).then((r) => r.text())
         let urls = html?.match(/(?<=href="\/)watch\/(.*?)(?=")/gm) as string[]
-        urls = functions.removeDuplicates(urls?.map((u) => `https://beta.crunchyroll.com/${u}`))
+        urls = functions.removeDuplicates(urls?.map((u: any) => `https://beta.crunchyroll.com/${u}`))
         if (!urls?.length) {
             const episodesLink = await ipcRenderer.invoke("get-episodes-link")
             const episodesJSON = await fetch(episodesLink, {headers: {cookie}}).then((r) => r.json())
+            const region = episodesLink.match(/(?<=\/v2\/)(.*?)(?=\/)/)?.[0]?.toLowerCase()
             urls = [] as string[]
             for (let i = 0; i < episodesJSON.items.length; i++) {
-                const episode = episodesJSON.items[i] 
-                urls.push(`https://beta.crunchyroll.com/watch/${episode.id}/${episode.slug_title}`)
+                const episode = episodesJSON.items[i]
+                urls.push(`https://beta.crunchyroll.com/${region !== "us" ? `${region}/` : ""}watch/${episode.id}/${episode.slug_title}`)
             }
             if (!urls?.length) return ipcRenderer.invoke("download-error", "search")
         }
-        let episodes = await Promise.all(urls.map((u) => parseEpisodeBeta(u)))
-        return episodes.sort((a, b) => Number(a.episode_number) > Number(b.episode_number) ? 1 : -1)
+        let episodes = await Promise.all(urls.map((u: any) => parseEpisodeBeta(u)))
+        return episodes.sort((a: any, b: any) => Number(a.episode_number) > Number(b.episode_number) ? 1 : -1)
     }
 
     const parsePlaylist = async (url: string, noSub?: boolean) => {
