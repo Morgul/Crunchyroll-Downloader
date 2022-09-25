@@ -1,7 +1,6 @@
 import {app, BrowserWindow, ipcMain, dialog, shell, globalShortcut, session, protocol} from "electron"
 import {autoUpdater} from "electron-updater"
 import windowStateKeeper from "electron-window-state"
-import debounce from "debounce"
 import path from "path"
 import fs from "fs"
 import axios from "axios"
@@ -91,11 +90,11 @@ ipcMain.handle("download-url", (event, url, html) => {
 
 const openWebsite = async () => {
   if (!website) {
-    let websiteState = windowStateKeeper({defaultWidth: 800, defaultHeight: 600})
+    let websiteState = windowStateKeeper({file: "website.json", defaultWidth: 800, defaultHeight: 600})
     website = new BrowserWindow({width: websiteState.width, height: websiteState.height, minWidth: 790, minHeight: 550, frame: false, backgroundColor: "#ffffff", center: false, webPreferences: {nodeIntegration: true, webviewTag: true, contextIsolation: false}})
     await website.loadFile(path.join(__dirname, "crunchyroll.html"))
     require("@electron/remote/main").enable(website.webContents)
-    website.on("resize", debounce(websiteState.saveState, 500))
+    websiteState.manage(website)
     website?.on("closed", () => {
       website = null
     })
@@ -506,13 +505,13 @@ if (!singleLock) {
   })
 
   app.on("ready", () => {
-    let mainWindowState = windowStateKeeper({defaultWidth: 800, defaultHeight: 600})
+    let mainWindowState = windowStateKeeper({file: "main.json", defaultWidth: 800, defaultHeight: 600})
     window = new BrowserWindow({width: mainWindowState.width, height: mainWindowState.height, minWidth: 790, minHeight: 550, frame: false, backgroundColor: "#f97540", center: true, webPreferences: {nodeIntegration: true, contextIsolation: false}})
     window.loadFile(path.join(__dirname, "index.html"))
     window.removeMenu()
     require("@electron/remote/main").enable(window.webContents)
     if (ffmpegPath && process.platform !== "win32" && process.env.DEVELOPMENT !== "true") fs.chmodSync(ffmpegPath, "777")
-    window.on("resize", debounce(mainWindowState.saveState, 500))
+    mainWindowState.manage(window)
     window.on("close", () => {
       website?.close()
       for (let i = 0; i < active.length; i++) {
