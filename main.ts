@@ -1,6 +1,7 @@
 import {app, BrowserWindow, ipcMain, dialog, shell, globalShortcut, session, protocol} from "electron"
 import {autoUpdater} from "electron-updater"
 import windowStateKeeper from "electron-window-state"
+import debounce from "debounce"
 import path from "path"
 import fs from "fs"
 import axios from "axios"
@@ -94,7 +95,7 @@ const openWebsite = async () => {
     website = new BrowserWindow({width: websiteState.width, height: websiteState.height, minWidth: 790, minHeight: 550, frame: false, backgroundColor: "#ffffff", center: false, webPreferences: {nodeIntegration: true, webviewTag: true, contextIsolation: false}})
     await website.loadFile(path.join(__dirname, "crunchyroll.html"))
     require("@electron/remote/main").enable(website.webContents)
-    websiteState.manage(website)
+    website.on("resize", debounce(websiteState.saveState, 500))
     website?.on("closed", () => {
       website = null
     })
@@ -511,7 +512,7 @@ if (!singleLock) {
     window.removeMenu()
     require("@electron/remote/main").enable(window.webContents)
     if (ffmpegPath && process.platform !== "win32" && process.env.DEVELOPMENT !== "true") fs.chmodSync(ffmpegPath, "777")
-    mainWindowState.manage(window)
+    window.on("resize", debounce(mainWindowState.saveState, 500))
     window.on("close", () => {
       website?.close()
       for (let i = 0; i < active.length; i++) {
