@@ -235,6 +235,7 @@ const SearchBar: React.FunctionComponent = (props) => {
             playback = json.items?.[0].playback
         }
         const vilos = await fetch(playback, {headers: {cookie}}).then((r) => r.json())
+        if (!vilos.subtitles) vilos.subtitles = {}
         let subLang = functions.dashLocale(language)
         let subtitles = [] as string[]
         let subtitleNames = [] as string[]
