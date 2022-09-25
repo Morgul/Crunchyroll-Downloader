@@ -118,6 +118,7 @@
     "crunchyroll.ts": "^0.3.9",
     "electron-store": "^7.0.1",
     "electron-updater": "^4.3.5",
+    "electron-window-state": "^5.0.3",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
     "react-dom": "^17.0.1",
