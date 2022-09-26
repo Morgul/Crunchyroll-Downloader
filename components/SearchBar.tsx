@@ -121,7 +121,7 @@ const SearchBar: React.FunctionComponent = (props) => {
         if (!urls) return ipcRenderer.invoke("download-error", "search")
         urls = urls.map((u) => `${url}/${u}`)
         let episodes = await Promise.all(urls.map((u) => parseEpisode(u)))
-        return episodes.sort((a, b) => Number(a.episode_number) > Number(b.episode_number) ? 1 : -1)
+        return episodes.sort((a, b) => Number(a?.episode_number) > Number(b?.episode_number) ? 1 : -1)
     }
 
     const parseEpisodesBeta = async (url: string, html?: string) => {
@@ -141,7 +141,7 @@ const SearchBar: React.FunctionComponent = (props) => {
             if (!urls?.length) return ipcRenderer.invoke("download-error", "search")
         }
         let episodes = await Promise.all(urls.map((u: any) => parseEpisodeBeta(u)))
-        return episodes.sort((a: any, b: any) => Number(a.episode_number) > Number(b.episode_number) ? 1 : -1)
+        return episodes.sort((a: any, b: any) => Number(a?.episode_number) > Number(b?.episode_number) ? 1 : -1)
     }
 
     const parsePlaylist = async (url: string, noSub?: boolean) => {
