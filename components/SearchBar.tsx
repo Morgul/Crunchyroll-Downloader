@@ -224,7 +224,7 @@ const SearchBar: React.FunctionComponent = (props) => {
         try {
             json = JSON.parse(html.match(/(?<=window\.__INITIAL_STATE__ = ){.*}/gm)?.[0]!)
         } catch {
-            return null
+            return { subtitles: null, subtitleNames: null }
         }
         let playback = json.content.media.byId[id].playback
         if (!playback) {
@@ -248,7 +248,7 @@ const SearchBar: React.FunctionComponent = (props) => {
                 subtitles.push((value as any).url)
             }
         }
-        if (!subtitles?.[0]) return error ? ipcRenderer.invoke("download-error", "search") : null
+        if (!subtitles?.[0]) return error ? ipcRenderer.invoke("download-error", "search") : { subtitles: null, subtitleNames: null }
         if (!noDL) ipcRenderer.invoke("download-subtitles", {url: subtitles[0], dest: info.dest, id: info.id, episode: info.episode, kind: info.kind, template, language})
         return {subtitles, subtitleNames}
     }
