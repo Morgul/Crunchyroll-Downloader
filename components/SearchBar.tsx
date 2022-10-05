@@ -248,7 +248,7 @@ const SearchBar: React.FunctionComponent = (props) => {
                 subtitles.push((value as any).url)
             }
         }
-        if (!subtitles?.[0]) return error ? ipcRenderer.invoke("download-error", "search") : null
+        if (!subtitles?.[0]) return error ? ipcRenderer.invoke("download-error", "search") : {subtitles, subtitleNames}
         if (!noDL) ipcRenderer.invoke("download-subtitles", {url: subtitles[0], dest: info.dest, id: info.id, episode: info.episode, kind: info.kind, template, language})
         return {subtitles, subtitleNames}
     }
