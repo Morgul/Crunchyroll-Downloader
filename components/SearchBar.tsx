@@ -114,6 +114,7 @@ const SearchBar: React.FunctionComponent = (props) => {
     }
 
     const parseEpisodes = async (url: string, html?: string) => {
+        if (url.includes("episode")) return parseEpisode(url)
         const cookie = await ipcRenderer.invoke("get-cookie")
         if (url.endsWith("/")) url = url.slice(0, -1)
         if (!html) html = await fetch(functions.skipWall(url), {headers: {cookie}}).then((r) => r.text())
@@ -121,11 +122,10 @@ const SearchBar: React.FunctionComponent = (props) => {
         if (!urls) return ipcRenderer.invoke("download-error", "search")
         urls = urls.map((u) => `${url}/${u}`)
         for (let i = 0; i < urls.length; i++) {
-            let response = await fetch(urls[i], {headers: {cookie}}).then((r) => r.status)
-            if (response >= 400) {
-                let newUrls = html?.match(/(episode)(.*?)(?=\\")/gm)
-                newUrls = newUrls?.map((u) => `${url}/${u}`)
-                urls[i] = newUrls?.[i] || ""
+            let response = await fetch(urls[i], {headers: {cookie}})
+            if (!response.ok) {
+                let bit = urls[i]?.match(/(episode)(.*?)(?=\/)/gm)?.[0]
+                urls[i] = `${url}/${bit}`
             }
         }
         let episodes = await Promise.all(urls.map((u) => parseEpisode(u)))
