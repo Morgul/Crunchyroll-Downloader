@@ -120,6 +120,14 @@ const SearchBar: React.FunctionComponent = (props) => {
         let urls = html?.match(/(episode)(.*?)(?=" title)/gm)
         if (!urls) return ipcRenderer.invoke("download-error", "search")
         urls = urls.map((u) => `${url}/${u}`)
+        for (let i = 0; i < urls.length; i++) {
+            let response = await fetch(urls[i], {headers: {cookie}}).then((r) => r.status)
+            if (response >= 400) {
+                let newUrls = html?.match(/(episode)(.*?)(?=\\")/gm)
+                newUrls = newUrls?.map((u) => `${url}/${u}`)
+                urls[i] = newUrls?.[i] || ""
+            }
+        }
         let episodes = await Promise.all(urls.map((u) => parseEpisode(u)))
         return episodes.sort((a, b) => Number(a?.episode_number) > Number(b?.episode_number) ? 1 : -1)
     }
