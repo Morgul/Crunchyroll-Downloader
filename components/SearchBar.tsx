@@ -114,7 +114,10 @@ const SearchBar: React.FunctionComponent = (props) => {
     }
 
     const parseEpisodes = async (url: string, html?: string) => {
-        if (url.includes("episode")) return parseEpisode(url)
+        if (url.includes("episode")) {
+            let episode = await parseEpisode(url)
+            return [episode]
+        }
         const cookie = await ipcRenderer.invoke("get-cookie")
         if (url.endsWith("/")) url = url.slice(0, -1)
         if (!html) html = await fetch(functions.skipWall(url), {headers: {cookie}}).then((r) => r.text())
