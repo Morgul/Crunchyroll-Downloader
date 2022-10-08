@@ -20,7 +20,7 @@ let ffmpegPath = undefined as any
 if (process.platform === "darwin") ffmpegPath = path.join(app.getAppPath(), "../../ffmpeg/ffmpeg.app")
 if (process.platform === "win32") ffmpegPath = path.join(app.getAppPath(), "../../ffmpeg/ffmpeg.exe")
 if (process.platform === "linux") ffmpegPath = path.join(app.getAppPath(), "../../ffmpeg/ffmpeg")
-if (!fs.existsSync(ffmpegPath)) ffmpegPath = process.platform === "darwin" ? "/opt/homebrew/Cellar/ffmpeg/5.1/bin/ffmpeg" : undefined
+if (!fs.existsSync(ffmpegPath)) ffmpegPath = process.platform === "darwin" ? "/opt/homebrew/Cellar/ffmpeg/5.1.2/bin/ffmpeg" : undefined
 autoUpdater.autoDownload = false
 const store = new Store()
 
@@ -329,6 +329,7 @@ const downloadEpisode = async (info: any, episode: CrunchyrollEpisode) => {
   if (qIndex !== -1) queue[qIndex].started = true
   let format = "mp4"
   if (info.softSubs) format = "mkv"
+  if (info.codec === "vp8") format = "webm"
   if (info.audioOnly) format = "mp3"
   if (info.skipConversion) format = "m3u8"
   if (info.thumbnails) format = "png"
@@ -477,6 +478,7 @@ ipcMain.handle("move-queue", async (event, id: number) => {
 ipcMain.handle("download", async (event, info) => {
   let format = "mp4"
   if (info.softSubs) format = "mkv"
+  if (info.codec === "vp8") format = "webm"
   if (info.audioOnly) format = "mp3"
   if (info.skipConversion) format = "m3u8"
   if (info.thumbnails) format = "png"

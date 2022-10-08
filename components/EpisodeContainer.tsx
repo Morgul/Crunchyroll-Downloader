@@ -10,6 +10,7 @@ import m3u8Label from "../assets/m3u8Label.png"
 import pngLabel from "../assets/pngLabel.png"
 import assLabel from "../assets/assLabel.png"
 import mkvLabel from "../assets/mkvLabel.png"
+import webmLabel from "../assets/webmLabel.png"
 import closeContainer from "../assets/closeContainer.png"
 import pauseButton from "../assets/pauseButton.png"
 import playButton from "../assets/playButton.png"
@@ -255,6 +256,7 @@ const EpisodeContainer: React.FunctionComponent<EpisodeContainerProps> = (props:
     const getLabel = () => {
         if (props.format === "mp4") return mp4Label
         if (props.format === "mkv") return mkvLabel
+        if (props.format === "webm") return webmLabel
         if (props.format === "mp3") return mp3Label
         if (props.format === "m3u8") return m3u8Label
         if (props.format === "ass") return assLabel

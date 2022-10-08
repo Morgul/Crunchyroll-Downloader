@@ -21,6 +21,7 @@ export const LanguageContext = React.createContext<any>(null)
 export const FormatContext = React.createContext<any>(null)
 export const QualityContext = React.createContext<any>(null)
 
+export const CodecContext = React.createContext<any>(null)
 export const VideoQualityContext = React.createContext<any>(null)
 export const TemplateContext = React.createContext<any>(null)
 export const QueueContext = React.createContext<any>(null)
@@ -32,7 +33,8 @@ const App: React.FunctionComponent = () => {
   const [clearAll, setClearAll] = useState(false)
   const [deleteAll, setDeleteAll] = useState(false)
   const [stopAll, setStopAll] = useState(false)
-  const [videoQuality, setVideoQuality] = useState(16)
+  const [videoQuality, setVideoQuality] = useState(23)
+  const [codec, setCodec] = useState("copy")
   const [template, setTemplate] = useState("{seasonTitle} {episodeNumber}")
   const [type, setType] = useState("sub")
   const [language, setLanguage] = useState("enUS")
@@ -45,6 +47,7 @@ const App: React.FunctionComponent = () => {
   const [region, setRegion] = useState("US")
 
   return (
+    <CodecContext.Provider value={{codec, setCodec}}>
     <PortugeuseDialectContext.Provider value={{portugeuseDialect, setPortugeuseDialect}}>
     <SpanishDialectContext.Provider value={{spanishDialect, setSpanishDialect}}>
     <EnglishDialectContext.Provider value={{englishDialect, setEnglishDialect}}>
@@ -82,6 +85,7 @@ const App: React.FunctionComponent = () => {
     </EnglishDialectContext.Provider>
     </SpanishDialectContext.Provider>
     </PortugeuseDialectContext.Provider>
+    </CodecContext.Provider>
   )
 }
 

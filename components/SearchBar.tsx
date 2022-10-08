@@ -10,7 +10,7 @@ import searchButtonHover from "../assets/searchButton-hover.png"
 import "../styles/searchbar.less"
 import {CrunchyrollEpisode} from "crunchyroll.ts"
 import functions from "../structures/functions"
-import {TypeContext, QualityContext, FormatContext, LanguageContext, TemplateContext, VideoQualityContext, EnglishDialectContext, SpanishDialectContext, PortugeuseDialectContext} from "../renderer"
+import {TypeContext, QualityContext, CodecContext, FormatContext, LanguageContext, TemplateContext, VideoQualityContext, EnglishDialectContext, SpanishDialectContext, PortugeuseDialectContext} from "../renderer"
 
 const SearchBar: React.FunctionComponent = (props) => {
     const {template} = useContext(TemplateContext)
@@ -22,6 +22,7 @@ const SearchBar: React.FunctionComponent = (props) => {
     const {englishDialect} = useContext(EnglishDialectContext)
     const {spanishDialect} = useContext(SpanishDialectContext)
     const {portugeuseDialect} = useContext(PortugeuseDialectContext)
+    const {codec} = useContext(CodecContext)
     const [id, setID] = useState(1)
     const [directory, setDirectory] = useState("")
     const [folderHover, setFolderHover] = useState(false)
@@ -276,7 +277,7 @@ const SearchBar: React.FunctionComponent = (props) => {
       
     const download = async (searchText: string, html?: string) => {
         if (!searchText) return
-        let opts = {resolution: Number(quality), quality: videoQuality, language, template} as any
+        let opts = {resolution: Number(quality), quality: videoQuality, language, template, codec} as any
         if (type === "sub") opts.preferSub = true
         if (type === "dub") {
             opts.preferSub = false

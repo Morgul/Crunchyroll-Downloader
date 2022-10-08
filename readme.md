@@ -32,6 +32,18 @@ You can specify a custom output path. The default is `{seasonTitle} {episodeNumb
 {resolution} - The resolution (ex. "1080p"). Only available for video formats. \
 {language} - The language (ex. "English").
 
+### Advanced Video Options
+
+**Video Quality** - A value from 0-51 where 0 is lossless and 51 is very poor quality. Setting this too low has diminishing returns because it won’t be very noticeable but the filesize would become huge. The recommended range is between 17-28. 
+
+**Video Codec** - Different video coding formats have a different filesize to quality ratios and different computational times. The approximate sizes are for a 720p video. These are the supported codecs:
+
+No Re-Encoding - Original video, huge filesize. (Approx. size - 730MB) \
+H.264 - Worst quality to filesize ratio, but fastest. (Approx. size - 180MB) \
+H.265 - Best quality and smallest filesize, but has little support. (Approx. size - 120MB) \
+VP8 - Good quality, small filesize, but slowest. *Setting the codec to VP8 will also force the output format to be WEBM*. (Approx. size - 130MB) \
+VP9 - Better quality and faster than VP8. (Approx. size - 190MB)
+
 ### Installation
 
 Download the latest installer from the [releases](https://github.com/Tenpi/Crunchyroll-Downloader/releases) tab.

@@ -1,7 +1,8 @@
 import {ipcRenderer} from "electron"
 import React, {useContext, useEffect, useState} from "react"
 import {Dropdown, DropdownButton} from "react-bootstrap"
-import {TemplateContext, VideoQualityContext, TypeContext, LanguageContext, QualityContext, FormatContext, QueueContext, EnglishDialectContext, SpanishDialectContext, PortugeuseDialectContext} from "../renderer"
+import {TemplateContext, VideoQualityContext, TypeContext, LanguageContext, QualityContext, CodecContext,
+FormatContext, QueueContext, EnglishDialectContext, SpanishDialectContext, PortugeuseDialectContext} from "../renderer"
 import "../styles/advancedsettings.less"
 
 const AdvancedSettings: React.FunctionComponent = (props) => {
@@ -12,6 +13,7 @@ const AdvancedSettings: React.FunctionComponent = (props) => {
     const {language, setLanguage} = useContext(LanguageContext)
     const {format, setFormat} = useContext(FormatContext)
     const {quality, setQuality} = useContext(QualityContext)
+    const {codec, setCodec} = useContext(CodecContext)
     const {queue, setQueue} = useContext(QueueContext)
     const {englishDialect, setEnglishDialect} = useContext(EnglishDialectContext)
     const {spanishDialect, setSpanishDialect} = useContext(SpanishDialectContext)
@@ -42,10 +44,11 @@ const AdvancedSettings: React.FunctionComponent = (props) => {
         if (settings.englishDialect) setEnglishDialect(settings.englishDialect)
         if (settings.spanishDialect) setSpanishDialect(settings.spanishDialect)
         if (settings.portugeuseDialect) setPortugeuseDialect(settings.portugeuseDialect)
+        if (settings.codec) setCodec(settings.codec)
     }
 
     useEffect(() => {
-        ipcRenderer.invoke("store-settings", {template, videoQuality, queue, englishDialect, spanishDialect, portugeuseDialect})
+        ipcRenderer.invoke("store-settings", {template, videoQuality, codec, queue, englishDialect, spanishDialect, portugeuseDialect})
     })
 
     const ok = () => {
@@ -53,7 +56,8 @@ const AdvancedSettings: React.FunctionComponent = (props) => {
     }
 
     const revert = () => {
-        setVideoQuality(16)
+        setVideoQuality(23)
+        setCodec("copy")
         setTemplate("{seasonTitle} {episodeNumber}")
         setType("sub")
         setLanguage("enUS")
@@ -126,6 +130,11 @@ const AdvancedSettings: React.FunctionComponent = (props) => {
         setTimeout(() => {setCookieDeleted(false)}, 2000)
     }
 
+    const getCodec = () => {
+        if (codec === "copy") return "No Re-Encoding"
+        return String(codec).toUpperCase()
+    }
+
     if (visible) {
         return (
             <section className="settings-dialog">
@@ -136,16 +145,26 @@ const AdvancedSettings: React.FunctionComponent = (props) => {
                         </div>
                         <div className="settings-row-container">
                             <div className="settings-row">
-                                <p className="settings-text">Video Quality: </p>
-                                <input className="settings-input" type="text" spellCheck="false" value={videoQuality} onChange={changeVideoQuality} onKeyDown={changeVideoQualityKey}/>
-                            </div>
-                            <div className="settings-row">
                                 <p className="settings-text">Output: </p>
                                 <input className="settings-input wide" type="text" spellCheck="false" value={template} onChange={changeTemplate}/>
                             </div>
                             <div className="settings-row">
                                 <p className="settings-text">Concurrent Downloads: </p>
                                 <input className="settings-input" type="text" spellCheck="false" value={queue} onChange={changeQueue} onKeyDown={changeQueueKey}/>
+                            </div>
+                            <div className="settings-row">
+                                <p className="settings-text">Video Quality: </p>
+                                <input className="settings-input" type="text" spellCheck="false" value={videoQuality} onChange={changeVideoQuality} onKeyDown={changeVideoQualityKey}/>
+                            </div>
+                            <div className="settings-row">
+                                <p className="settings-text">Video Codec: </p>
+                                <DropdownButton className="small-drop" title={getCodec()} drop="down">
+                                    <Dropdown.Item className="small-drop" active={codec === "copy"} onClick={() => setCodec("copy")}>No Re-Encoding</Dropdown.Item>
+                                    <Dropdown.Item className="small-drop" active={codec === "h.264"} onClick={() => setCodec("h.264")}>H.264</Dropdown.Item>
+                                    <Dropdown.Item className="small-drop" active={codec === "h.265"} onClick={() => setCodec("h.265")}>H.265</Dropdown.Item>
+                                    <Dropdown.Item className="small-drop" active={codec === "vp8"} onClick={() => setCodec("vp8")}>VP8</Dropdown.Item>
+                                    <Dropdown.Item className="small-drop" active={codec === "vp9"} onClick={() => setCodec("vp9")}>VP9</Dropdown.Item>
+                                </DropdownButton>
                             </div>
                             <div className="settings-row">
                                 <p className="settings-text">English Dialect: </p>
