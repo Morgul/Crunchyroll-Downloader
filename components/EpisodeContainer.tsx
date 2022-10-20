@@ -269,12 +269,12 @@ const EpisodeContainer: React.FunctionComponent<EpisodeContainerProps> = (props:
 
     const openAnime = async (url: string) => {
         let anime = ""
-        if (/beta/.test(url)) {
+        if (true) {
             const html = await fetch(url).then((r) => r.text())
             const id = html.match(/(?<="series_id":")(.*)(?=","series_title":)/gm)?.[0]
-            anime = `https://beta.crunchyroll.com/series/${id}`
+            anime = `https://crunchyroll.com/series/${id}`
         } else {
-            anime = url.match(/(.*?)(?=\/e)/)![0]
+            // anime = url.match(/(.*?)(?=\/e)/)![0]
         }
         ipcRenderer.invoke("open-url", anime)
     }
