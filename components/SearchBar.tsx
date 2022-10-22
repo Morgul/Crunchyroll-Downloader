@@ -199,7 +199,10 @@ const SearchBar: React.FunctionComponent = (props) => {
         const vilos = await fetch(playback, {headers: {cookie}}).then((r) => r.json())
         let audioLang = type === "sub" ? "ja-JP" : functions.dashLocale(language)
         if (audioLang === "all") audioLang = "ja-JP"
-        if (vilos.audio_locale !== audioLang) return null
+        if (vilos.audio_locale !== audioLang) {
+            if (type === "sub") audioLang = "zh-CN"
+            if (vilos.audio_locale !== audioLang) return null
+        }
         let dialect = functions.getDialect(language, englishDialect, spanishDialect, portugeuseDialect)
         let subLang = type === "dub" || noSub ? "" : functions.dashLocale(dialect)
         let stream = vilos.streams.adaptive_hls[subLang].url
